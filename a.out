@@ -1,0 +1,41 @@
+#! /opt/homebrew/Cellar/icarus-verilog/11.0/bin/vvp
+:ivl_version "11.0 (stable)";
+:ivl_delay_selection "TYPICAL";
+:vpi_time_precision + 0;
+:vpi_module "/opt/homebrew/Cellar/icarus-verilog/11.0/lib/ivl/system.vpi";
+:vpi_module "/opt/homebrew/Cellar/icarus-verilog/11.0/lib/ivl/vhdl_sys.vpi";
+:vpi_module "/opt/homebrew/Cellar/icarus-verilog/11.0/lib/ivl/vhdl_textio.vpi";
+:vpi_module "/opt/homebrew/Cellar/icarus-verilog/11.0/lib/ivl/v2005_math.vpi";
+:vpi_module "/opt/homebrew/Cellar/icarus-verilog/11.0/lib/ivl/va_math.vpi";
+:vpi_module "/opt/homebrew/Cellar/icarus-verilog/11.0/lib/ivl/v2009.vpi";
+S_0x14c7057d0 .scope package, "$unit" "$unit" 2 1;
+ .timescale 0 0;
+S_0x14c705940 .scope module, "ALU" "ALU" 3 1;
+ .timescale 0 0;
+    .port_info 0 /INPUT 1 "carry_i";
+    .port_info 1 /INPUT 1 "ALUOp_i";
+    .port_info 2 /INPUT 3 "count_i";
+    .port_info 3 /INPUT 8 "rs_i";
+    .port_info 4 /INPUT 8 "op2_i";
+    .port_info 5 /OUTPUT 1 "carry_o";
+    .port_info 6 /OUTPUT 1 "zero_o";
+    .port_info 7 /OUTPUT 8 "res_o";
+o0x140008010 .functor BUFZ 1, C4<z>; HiZ drive
+v0x14c7053e0_0 .net "ALUOp_i", 0 0, o0x140008010;  0 drivers
+o0x140008040 .functor BUFZ 1, C4<z>; HiZ drive
+v0x14c715b50_0 .net "carry_i", 0 0, o0x140008040;  0 drivers
+v0x14c715bf0_0 .var "carry_o", 0 0;
+o0x1400080a0 .functor BUFZ 3, C4<zzz>; HiZ drive
+v0x14c715c80_0 .net "count_i", 2 0, o0x1400080a0;  0 drivers
+o0x1400080d0 .functor BUFZ 8, C4<zzzzzzzz>; HiZ drive
+v0x14c715d30_0 .net "op2_i", 7 0, o0x1400080d0;  0 drivers
+v0x14c715e20_0 .var "res_o", 7 0;
+o0x140008130 .functor BUFZ 8, C4<zzzzzzzz>; HiZ drive
+v0x14c715ed0_0 .net "rs_i", 7 0, o0x140008130;  0 drivers
+v0x14c715f80_0 .var "zero_o", 0 0;
+# The file index is used to find the file name in the following table.
+:file_names 4;
+    "N/A";
+    "<interactive>";
+    "-";
+    "ALU.sv";
