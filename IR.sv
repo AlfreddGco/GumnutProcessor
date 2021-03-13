@@ -4,12 +4,13 @@ module IR(
   input logic [17:0]
   inst_i,
   output logic [2:0]
-  op_o,//
   func_o,//
   rs_o,
   rs2_o,
   rd_o,
   count_o,
+  output logic [6:0]
+  op_o,
   output logic [7:0]
   disp_o,
   offset_o,//
@@ -19,7 +20,7 @@ module IR(
 );
 
   //Control Unit
-  always_comb op_o = inst_i[17:15];
+  always_comb op_o = {0, 0, 0, inst_i[17:14]};
   always_comb func_o = inst_i[17] ? inst_i[2:0] : inst_i[16:14];
   //logic
   always_comb rs_o = inst_i[10:8];
