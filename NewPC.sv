@@ -1,31 +1,25 @@
 module NewPC(
-  input logic
-  carry_i,
-  zero_i,
-  input logic [3:0]
-  PCoper_i,//selector
-  input logic [7:0]
-  disp_i,//branch offset
-  input logic [11:0]
-  addr_i,//jmp addr
-  PC_i,//current PC
-  output logic [11:0]
-  PC_o
+  input logic [3:0] PCoper_i,//selector
+  input logic carry_i,
+  input logic zero_o,
+  input logic [11:0] stackaddr_i,
+  input logic [11:0] intPC_i,//stack address
+  input logic [11:0] PC_i,//current PC
+  input logic [7:0] offset_i,//branch offset
+  input logic [11:0] addr_i,//jmp addr
+  output logic [11:0] PC_o
 );
 
-  logic [11:0] branch;
-  logic [1:0] decoded_operation;
-
-  always_comb begin
-
-  end
-
   always_comb begin 
-    case(decoded_operation) 
-      2'b00: PC_o = (PC_i+1);
-      2'b01: PC_o = addr_i; //jump
-      2'b10: PC_o = (PC_i + disp_i);
-      2'b11: PC_o = (PC_i+1);
+    case(PCoper_i)
+      4'b0000: PC_o = (PC_i+1);
+      4'b0100: PC_o = (zero_i) ? (PC_i + offset_i) :  (PC_i + 1); //branch
+      4'b0101: PC_o = (!zero_i) ? (PC_i + offset_i) :  (PC_i + 1); //branch
+      4'b0110: PC_o = (carry_i) ? (PC_i + offset_i) : (PC_i + 1); //branch
+      4'b0111: PC_o = (!carry_i) ? (PC_i + offset_i) : (PC_i + 1); //branch
+      4'b1000: PC_o = addr_i;//jump
+      4'b1100: PC_o = intP;//from intReg
+      4'b1010: PC_o = stackaddr_i;//stack subroutine
     endcase 
   end
 

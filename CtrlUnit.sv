@@ -154,8 +154,20 @@ module CtrlUnit(
     else RegMux_o = 2'b00;
   end
 
-  assign PCEn_o = 1'b0;//(?)
-  assign PCoper_o = 4'b0000;//(?)
+  assign PCEn_o = (currentState === write_back_state);//(?)
+
+  always_comb begin : PCOperBlock
+    if(currentState === write_back_state) begin
+      if(branch & func_i === 3'b00) PCoper_o = 4'b0100;//z=1
+      else if(branch & func_i === 3'b01) PCoper_o = 4'b0101;//z=0
+      else if(branch & func_i === 3'b10) PCoper_o = 4'b0110;//c=1
+      else if(branch & func_i === 3'b11) PCoper_o = 4'b0111;//c=0
+      else if(jump) PCoper_o = 4'b1000;//jump
+      //intReg missing
+      //stack missing
+    end
+    else PCoper_o = 4'b0000;//read when memory state
+  end
 
   assign ret_o = 1'b0;//dont care (push stack)
   assign jsb_o = 1'b0;//dont care (pop stack)
