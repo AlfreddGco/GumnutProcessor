@@ -5,10 +5,10 @@ module CtrlUnit(
   input logic port_ack_i,
   input logic [6:0] op_i,//opcode comes from IR
   input logic [2:0] func_i,//subfunction comes from IR
-  output logic op2_o,
+  output logic op2_o,//activates immed
   output logic [3:0] ALUOp_o,
   output logic RegWrt_o,//write enable bank register
-  output logic [1:0] RegMux_o,
+  output logic [1:0] RegMux_o,//selects dat_i for bank register
   output logic [3:0] PCoper_o,
   output logic [1:0] pop_o,
   output logic int_o,
@@ -121,9 +121,38 @@ module CtrlUnit(
   end
 
   //outputs
-  assign int_o = (currentState === int_state);
+  assign op2_o = (op_i === 7'b0);//immed operation
+
+  always_comb begin : aluBlock
+    if(func_i === 3'b000 | func_i === 3'b001) ALUOp_o = 4'b000;//add
+    else if(func_i === 3'b010 | func_i === 3'b011) ALUOp_o = 4'b001;//sub
+    else if(func_i === 3'b100) ALUOp_o = 4'b010;//and
+    else if(func_i === 3'b101) ALUOp_o = 4'b011;//or
+    else if(func_i === 3'b110) ALUOp_o = 4'b100;//xor
+    else if(func_i === 3'b111) ALUOp_o = 4'b101;//mask
+    else ALUOp_o = 4'bxxxx;
+  end
+
   assign RegWrt_o = (currentState === write_back_state);
-  logic [3:0] aluSelector = 4'b0000;
-  assign ALUOp_o = (currentState === decode_state | currentState === write_back_state | currentState === execute_state) ? aluSelector : 4'bxxxx;
+
+  //0 (ALU) 1 (data_dat) 2 (port_dat) -> bank_register.dat_i
+  always_comb begin : RegMuxBlock
+    if(mem & (func_i === 3'b00 | func_i === 3'b01)) RegMux_o = 2'b01;
+    else if(mem & (func_i === 3'b10 | func_i === 3'b11)) RegMux_o = 2'b10;
+    else RegMux_o = 2'b00;
+  end
+
+  assign PCoper_o = 4'b0000;//(?)
+
+  assign pop_o = 2'b00;
+  assign int_o = (currentState === int_state);
+
+  assign stb_o = stby;
+  assign cyc = 1'b0;
+
+  assign weport_o = 1'b0;//(?)
+  assign data_we_o = 1'b0;//(?)
+  assign data_stb_o = 1'b0;//(?)
+  assign data_cyc_o = 1'b0;//(?)
 
 endmodule
