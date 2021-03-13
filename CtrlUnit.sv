@@ -28,14 +28,16 @@ module CtrlUnit(
   assign jump = (op_i === 7'b0011110);
   assign misc = (op_i === 7'b1111110);
 
-  logic alu_reg, alu_immed;
+  logic alu_reg;//address (?)
+  logic [7:0] alu_immed;
   
-  logic inp, out;
+
+  logic stm, ldm;//load memory, store memory
+  assign stm = (op_i === 7'b10 & func_i === 3'b00);
+  assign ldm = (op_i === 7'b10 & func_i === 3'b01);
+  logic inp, out;//input output into register
   assign inp = (op_i === 7'b10 & func_i === 3'b10);
   assign out = (op_i === 7'b10 & func_i === 3'b11);
-  logic stm, ldm;
-  assign stm = '0;
-  assign ldm = '0;
 
   logic inter;
   
