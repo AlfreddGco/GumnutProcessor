@@ -35,10 +35,6 @@ module CtrlUnit(
   assign jump = (op_i === 7'b0011110);
   assign misc = (op_i === 7'b1111110);
 
-  logic alu_reg;//address (?)
-  logic [7:0] alu_immed;
-  
-
   logic stm, ldm;//load memory, store memory
   assign stm = (op_i === 7'b10 & func_i === 3'b00);
   assign ldm = (op_i === 7'b10 & func_i === 3'b01);
@@ -46,8 +42,6 @@ module CtrlUnit(
   assign inp = (op_i === 7'b10 & func_i === 3'b10);
   assign out = (op_i === 7'b10 & func_i === 3'b11);
 
-  logic inter;
-  
   logic _wait, stby;
   assign _wait = (op_i === 7'b1111110 & func_i === 3'b100);
   assign stby = (op_i === 7'b1111110 & func_i === 3'b101);
@@ -79,10 +73,10 @@ module CtrlUnit(
 
   always_comb begin : decodeBlock
     if(currentState == decode_state) begin
-      if(branch & !inter) nextState = fetch_state;
-      else if(jump & !inter) nextState = fetch_state;
-      else if(misc & !(_wait | stby) & !inter) nextState = fetch_state;
-      else if(misc & (_wait | stby) & !inter) nextState = decode_state;
+      if(branch & !int_req) nextState = fetch_state;
+      else if(jump & !int_req) nextState = fetch_state;
+      else if(misc & !(_wait | stby) & !int_req) nextState = fetch_state;
+      else if(misc & (_wait | stby) & !int_req) nextState = decode_state;
       else if(alu_immed | alu_reg | shift | mem) nextState = execute_state;
       else nextState = int_state;
     end
@@ -95,10 +89,10 @@ module CtrlUnit(
       else if(mem & ldm & data_ack_i) nextState = write_back_state;
       else if(mem & inp & port_ack_i) nextState = write_back_state;
       else if(!mem) nextState = write_back_state;
-      else if(mem & stm & data_ack_i & !inter) nextState = fetch_state;
-      else if(mem & out & port_ack_i & !inter) nextState = fetch_state;
-      else if(mem & stm & data_ack_i & inter) nextState = int_state;
-      else if(mem & out & port_ack_i & inter) nextState = int_state;
+      else if(mem & stm & data_ack_i & !int_req) nextState = fetch_state;
+      else if(mem & out & port_ack_i & !int_req) nextState = fetch_state;
+      else if(mem & stm & data_ack_i & int_req) nextState = int_state;
+      else if(mem & out & port_ack_i & int_req) nextState = int_state;
     end
   end
 
@@ -108,16 +102,16 @@ module CtrlUnit(
       else if((inp | out) & !port_ack_i) nextState = mem_state;
       else if(ldm & data_ack_i) nextState = write_back_state;
       else if(inp & port_ack_i) nextState = write_back_state;
-      else if(stm & data_ack_i & !inter) nextState = fetch_state;
-      else if(out & port_ack_i & !inter) nextState = fetch_state;
-      else if(stm & data_ack_i & inter) nextState = int_state;
-      else if(out & port_ack_i & inter) nextState = int_state;
+      else if(stm & data_ack_i & !int_req) nextState = fetch_state;
+      else if(out & port_ack_i & !int_req) nextState = fetch_state;
+      else if(stm & data_ack_i & int_req) nextState = int_state;
+      else if(out & port_ack_i & int_req) nextState = int_state;
     end
   end
 
   always_comb begin : writeBackBlock
     if(currentState == write_back_state) begin
-      nextState = (inter === 1'b1) ? int_state : fetch_state;
+      nextState = (int_req === 1'b1) ? int_state : fetch_state;
     end
   end
 
@@ -142,8 +136,8 @@ module CtrlUnit(
     else ALUOp_o = 4'bxxxx;
   end
 
-  assign ALUFR_o = 1'b0;//alu flags
-  assign ALUEN_o = 1'b0;//alu enable
+  assign ALUFR_o = (currentState === int_state);//alu flags
+  assign ALUEN_o = (currentState === execute_state);//alu enable
 
   assign RegWrt_o = (currentState === write_back_state);
 
