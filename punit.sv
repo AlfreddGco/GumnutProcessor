@@ -3,9 +3,10 @@
 `include "./Mux2to1.sv"
 `include "./StmMux_c.sv"
 `include "./BankRegister.sv"
+`include "./FlagReg.sv"
 `include "./ALU.sv"
 
-module ProcessingUnit(
+module punit(
   input logic clk_i,
   input logic ClkEn_i,
   input logic rst_i,
@@ -19,14 +20,20 @@ module ProcessingUnit(
   input logic [3:0] ALUOp_c_i,
   //
   input logic stm_mux_i,
+  input logic ALUFR_c_i,
+  input logic reti_c_i,
+  input logic intc_i,
+  input logic intz_i,
+  input logic ccC_e_i,//alus carry
   //
   output logic [6:0] op_o,
   output logic [2:0] func_o,
   output logic [11:0] addr_o,
   output logic [7:0] disp_o,
   output logic [7:0] res_o,
-  output logic carry_o,
-  output logic zero_o
+  //
+  output logic ccC_e_o,
+  output logic ccZ_e_o
 );
 
 //IR wires
@@ -64,6 +71,21 @@ Mux4to1 mux4(
   .M(dat_e)
 );
 
+FlagReg flag_reg(
+  .clk(clk_i),
+  .cen(ClkEn_i),
+  .rst(rst_i),
+  .we(ALUFR_c_i),
+  .iwe(reti_c_i),
+  .c_i(carry_e),
+  .z_i(zero_e),
+  .intc_i(intc_i),
+  .intz_i(intz_i),
+  .c_o(ccC_e_o),
+  .z_o(ccZ_e_o)
+);
+
+
 wire [7:0] rsr_e, rsr2_e;
 
 BankRegister bank_register(
@@ -88,14 +110,16 @@ Mux2to1 mux2(
   .m(op2_e)
 );
 
+wire carry_e, zero_e;
+
 ALU alu(
   .rs_i(rsr_e),
   .op2_i(op2_e),
   .count_i(),
-  .carry_i(),
+  .carry_i(ccC_e_i),
   .ALUOp_i(ALUOp_c_i),
-  .zero_o(zero_o),
-  .carry_o(carry_o),
+  .zero_o(zero_e),
+  .carry_o(carry_e),
   .res_o(ALU_e)
 );
 
