@@ -20,17 +20,17 @@ module IR(
 );
 
   //Control Unit
-  always_comb op_o = {0, 0, 0, inst_i[17:14]};
-  always_comb func_o = inst_i[17] ? inst_i[2:0] : inst_i[16:14];
+  assign op_o = {3'b000, inst_i[17:14]};
+  assign func_o = inst_i[17] ? inst_i[2:0] : inst_i[16:14];
   //logic
-  always_comb rs_o = inst_i[10:8];
-  always_comb rs2_o = inst_i[7:5];
-  always_comb rd_o = inst_i[13:11];
-  always_comb immed_o = inst_i[7:0];
-  always_comb count_o = inst_i[7:5];
+  assign rs_o = inst_i[10:8];
+  assign rs2_o = inst_i[7:5];
+  assign rd_o = inst_i[13:11];
+  assign immed_o = inst_i[7:0];
+  assign count_o = inst_i[7:5];
   //others
-  always_comb addr_o = inst_i[11:0];
-  always_comb offset_o = inst_i[7:0];
-  always_comb disp_o = inst_i[7:0];
+  assign addr_o = inst_i[11:0];
+  assign offset_o = inst_i[7:0];
+  assign disp_o = inst_i[7:0];
 
 endmodule

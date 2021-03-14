@@ -12,8 +12,7 @@ module BankRegister(
   dat_i,
   output logic [7:0]
   rs_o,
-  rs2_o,
-  rd_o
+  rs2_o
 );
 
   integer i;
