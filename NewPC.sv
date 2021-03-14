@@ -1,9 +1,9 @@
 module NewPC(
   input logic [3:0] PCoper_i,//selector
   input logic carry_i,
-  input logic zero_o,
-  input logic [11:0] stackaddr_i,
-  input logic [11:0] intPC_i,//stack address
+  input logic zero_i,
+  input logic [11:0] stackaddr_i,//stack address
+  input logic [11:0] intPC_i,//intReg address
   input logic [11:0] PC_i,//current PC
   input logic [7:0] offset_i,//branch offset
   input logic [11:0] addr_i,//jmp addr
@@ -18,7 +18,7 @@ module NewPC(
       4'b0110: PC_o = (carry_i) ? (PC_i + offset_i) : (PC_i + 1); //branch
       4'b0111: PC_o = (!carry_i) ? (PC_i + offset_i) : (PC_i + 1); //branch
       4'b1000: PC_o = addr_i;//jump
-      4'b1100: PC_o = intP;//from intReg
+      4'b1100: PC_o = intPC_i;//from intReg
       4'b1010: PC_o = stackaddr_i;//stack subroutine
     endcase 
   end

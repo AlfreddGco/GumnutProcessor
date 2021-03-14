@@ -11,7 +11,7 @@ module ProgCounter(
 
   always_ff @(posedge gclk) begin
     if(rst) PC_o <= 12'b0;
-    else PC_o <= PC_i;
+    else if(!rst & we) PC_o <= PC_i;
   end
 
 endmodule
