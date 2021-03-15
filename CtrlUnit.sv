@@ -159,9 +159,9 @@ module CtrlUnit(
       else if(branch & func_i === 3'b10) PCoper_o = 4'b0110;//c=1
       else if(branch & func_i === 3'b11) PCoper_o = 4'b0111;//c=0
       else if(jump) PCoper_o = 4'b1000;//jump
-      //intReg missing
       //stack missing
     end
+    else if(currentState === int_state) PCoper_o = 4'b1100;
     else PCoper_o = 4'b0000;//read when memory state
   end
 
