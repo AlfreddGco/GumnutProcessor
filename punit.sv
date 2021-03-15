@@ -21,6 +21,7 @@ module punit(
   //
   input logic stm_mux_i,
   input logic ALUFR_c_i,
+  input logic ALUEn_c_i,
   input logic reti_c_i,
   input logic intc_i,
   input logic intz_i,
@@ -64,7 +65,7 @@ StmMux_c stm_mux(
 wire [7:0] ALU_e, dat_e;
 
 Mux4to1 mux4(
-  .A_i(ALU_e),
+  .A_i(ALUEn_c_i ? ALU_e : 8'b0),
   .B_i(data_dat_i),
   .C_i(port_data_i),
   .Sel(RegMux_c_i),

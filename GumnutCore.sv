@@ -98,6 +98,7 @@ module GumnutCore(
     //
     .stm_mux_i(StmMux_c),
     .ALUFR_c_i(ALUFR_c),
+    .ALUEn_c_i(ALUEn_c),
     .reti_c_i(reti_c),
     .intc_i(intc_e),
     .intz_i(intz_e),
