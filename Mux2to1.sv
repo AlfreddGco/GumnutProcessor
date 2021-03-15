@@ -9,8 +9,8 @@ module Mux2to1(
 );
 
   always_comb begin
-    m = (sel === 2'b00) ? ina :
-    (sel === 2'b01) ? inb : 8'bx;
+    m = (sel === 1'b0) ? ina :
+    (sel === 1'b1) ? inb : 8'bx;
   end
 
 endmodule

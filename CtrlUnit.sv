@@ -29,7 +29,7 @@ module CtrlUnit(
 
   //derive this variables from input
   logic shift, mem, branch, jump, misc;
-  logic alu_immed, alu_reg; //
+  logic alu_immed, alu_reg;
   assign shift = (op_i === 7'b110);
   assign mem = (op_i === 7'b10);
   assign branch = (op_i === 7'b0111110);
