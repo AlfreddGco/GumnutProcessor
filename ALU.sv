@@ -16,7 +16,7 @@ module ALU(
 );
 
 
-  always_comb begin
+  always @(*) begin
     case(ALUOp_i)
       4'b0000: {carry_o, res_o} = rs_i + op2_i;
       4'b0001: {carry_o, res_o} = rs_i + op2_i + carry_i;
