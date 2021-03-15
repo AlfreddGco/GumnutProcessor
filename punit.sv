@@ -16,7 +16,7 @@ module punit(
   input logic [7:0] port_data_i,
   input logic [1:0] RegMux_c_i,
   input logic RegWrt_c_i,
-  input logic [1:0] op2_c_i,
+  input logic op2_c_i,
   input logic [3:0] ALUOp_c_i,
   //
   input logic stm_mux_i,
@@ -115,7 +115,7 @@ wire carry_e, zero_e;
 ALU alu(
   .rs_i(rsr_e),
   .op2_i(op2_e),
-  .count_i(),
+  .count_i(count_e),
   .carry_i(ccC_e_i),
   .ALUOp_i(ALUOp_c_i),
   .zero_o(zero_e),

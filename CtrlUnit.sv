@@ -9,7 +9,7 @@ module CtrlUnit(
   output logic op2_o,//activates immed
   output logic [3:0] ALUOp_o,
   output logic ALUFR_o,
-  output logic ALUEN_o,
+  output logic ALUEn_o,
   output logic RegWrt_o,//write enable bank register
   output logic [1:0] RegMux_o,//selects dat_i for bank register
   output logic PCEn_o,
@@ -35,6 +35,9 @@ module CtrlUnit(
   assign jump = (op_i === 7'b0011110);
   assign misc = (op_i === 7'b1111110);
 
+  logic alu_immed, alu_reg; //
+  assign alu_immed = (op_i === 7'b0);
+
   logic stm, ldm;//load memory, store memory
   assign stm = (op_i === 7'b10 & func_i === 3'b00);
   assign ldm = (op_i === 7'b10 & func_i === 3'b01);
@@ -45,7 +48,6 @@ module CtrlUnit(
   logic _wait, stby;
   assign _wait = (op_i === 7'b1111110 & func_i === 3'b100);
   assign stby = (op_i === 7'b1111110 & func_i === 3'b101);
-
 
   typedef enum logic [2:0] {
     fetch_state,
@@ -137,7 +139,7 @@ module CtrlUnit(
   end
 
   assign ALUFR_o = (currentState === int_state);//alu flags
-  assign ALUEN_o = (currentState === execute_state);//alu enable
+  assign ALUEn_o = (currentState === execute_state);//alu enable
 
   assign RegWrt_o = (currentState === write_back_state);
 

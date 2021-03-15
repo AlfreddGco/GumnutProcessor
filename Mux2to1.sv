@@ -2,7 +2,7 @@ module Mux2to1(
   input logic [7:0]
   ina,
   inb,
-  input logic [1:0]
+  input logic
   sel,
   output logic [7:0]
   m
