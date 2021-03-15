@@ -32,6 +32,8 @@ always_comb begin
     4'b1011: {carry_o, res_o} = rs_i & ~op2_i;
     //dont cares
   endcase
+
+  zero_o = (res_o === 8'b0);
 end
 
 endmodule

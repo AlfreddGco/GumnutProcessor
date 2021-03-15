@@ -20,6 +20,7 @@ module GumnutCore(
   output logic stb_o,
   output logic cyc_o,
   input logic data_ack_i,
+  input logic port_ack_i,
   output logic int_ack_o
 );
 
@@ -40,7 +41,7 @@ module GumnutCore(
     .clk(clk_i),
     .int_req(int_req_i),
     .inst_ack_i(inst_ack_i),
-    .port_ack_i(),
+    .port_ack_i(port_ack_i),
     .op_i(op_e),
     .func_i(func_e),
     .op2_o(op2_c),
